@@ -1,13 +1,18 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <MainToolbar/>
     <router-view/>
   </div>
 </template>
 
 <script>
+import MainToolbar from './components/MainToolbar';
+
 export default {
-  name: 'App'
+  name: 'MainApp',
+  components: {
+    MainToolbar
+  }
 }
 </script>
 
@@ -18,6 +23,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+body {
+  background-color: rgb(250, 250, 250);
 }
 </style>
