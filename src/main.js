@@ -10,10 +10,11 @@ require('firebase/database');
 
 Vue.config.productionTip = false
 
+let app; 
 
 // Initialize Firebase
 // TODO place in a dedicated config file on production
-var config = {
+var firebaseConfig = {
   apiKey: "AIzaSyDFggnFDSb1eeliaV1n2W9leKFfVR4P-D4",
   authDomain: "stashe-app.firebaseapp.com",
   databaseURL: "https://stashe-app.firebaseio.com",
@@ -21,7 +22,7 @@ var config = {
   storageBucket: "stashe-app.appspot.com",
   messagingSenderId: "49563228206"
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 
 
 // Do some validation before each navigation, 
@@ -42,9 +43,14 @@ router.beforeEach((to, from, next) => {
 });
 
 /* eslint-disable no-new */
-new Vue({
-  el: '#stashe-web-app',
-  router,
-  components: { MainApp },
-  template: '<MainApp/>'
-})
+// ensure that the user object is properly set before starting the app
+firebase.auth().onAuthStateChanged( function(user) {
+  if (!app) {
+    app = new Vue({
+      el: '#stashe-web-app',
+      router,
+      components: { MainApp },
+      template: '<MainApp/>'
+    })
+  }
+});
