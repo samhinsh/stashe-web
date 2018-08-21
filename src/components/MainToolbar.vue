@@ -12,17 +12,35 @@
 
                 <!-- TODO Replace with icon -->
                 <span class="item">Settings</span> 
-                
+
                 <!-- TODO Replace with icon -->
                 <span class="item">Profile</span>
+
+                <button @click="didClickLogoutButton">Logout</button>
             </span>
         </div>
     </div>
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default {
-    name: 'MainToolbar'
+    name: 'MainToolbar',
+    methods: {
+        didClickLogoutButton: function() {
+            console.log("SAM:: Clicked log out button");
+            let router = this.$router;
+
+            firebase.auth()
+            .signOut()
+            .then(function() {
+                console.log("SAM:: Sign out promise resolved");
+                console.log("SAM:: This: ", typeof this, this);
+                router.replace('/login');
+            });
+        }
+    }
 }
 </script>
 

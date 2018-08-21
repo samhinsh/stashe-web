@@ -1,18 +1,12 @@
 <template>
   <div id="app">
-    <MainToolbar/>
     <router-view/>
   </div>
 </template>
 
 <script>
-import MainToolbar from './components/MainToolbar';
-
 export default {
-  name: 'MainApp',
-  components: {
-    MainToolbar
-  }
+  name: 'MainApp'
 }
 </script>
 

@@ -1,6 +1,8 @@
 <template>
     <div class='ReadingListGrid container'>
         <ul class='flex-grid'>
+            
+            <!-- TODO substitute in real data model & perform binding on the cell class -->
             <li v-for="n in 15">
                <ReadingListGridCell class="cell"/> 
             </li>
