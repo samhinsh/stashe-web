@@ -3,9 +3,8 @@
         <div class='thumbnail'></div>
 
         <div class='headlineContainer'>
-            <p class='headlineText'>Hello World!</p>
+            <p class='headlineText'>{{ read.headline }}</p>
         </div>
-        
     </div>
 </template>
 
@@ -13,11 +12,14 @@
 <script>
 export default {
     name: 'ReadingListGridCell',
+
+    props: {
+        read: Object // create & use strong Database.Read object
+    },
+
     methods: {
         didClickCellBody: function(event) {
-            if (event) {
-                alert("Hello World from this Reading List Grid Cell!");
-            }
+            if (event) { window.open(this.read.url); }
         }
     }
 }
@@ -62,7 +64,6 @@ div.headlineContainer {
 p.headlineText {
     /*  TODO make more robust to handle multiple lines
         Consider: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/ */
-    font-weight: bold;
     margin-left: 5%;
     max-width: 90%;
     overflow: hidden;
