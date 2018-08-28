@@ -1,7 +1,7 @@
 <template>
     <div class='ReadingListGrid container'>
         <ul class='flex-grid'>            
-            <li v-for="read in formattedReadingListArray">
+            <li v-for="read in formattedReadingListArray" :key="read.id">
                <ReadingListGridCell :read='read'/> 
             </li>
         </ul>
