@@ -4,6 +4,8 @@ import Vue from 'vue'
 import MainApp from './MainApp'
 import router from './router'
 
+import { getUser } from './utilities/DatabaseUtilities'
+
 const firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
@@ -11,6 +13,7 @@ require('firebase/database');
 Vue.config.productionTip = false
 
 let app; 
+window.StasheApp = {};
 
 // Initialize Firebase
 // TODO place in a dedicated config file on production
@@ -42,15 +45,33 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+
+function startApp() {
+  return new Vue({
+    el: '#stashe-web-app',
+    router,
+    components: { MainApp },
+    template: '<MainApp/>'
+  })
+}
+
 /* eslint-disable no-new */
 // ensure that the user object is properly set before starting the app
-firebase.auth().onAuthStateChanged( function(user) {
-  if (!app) {
-    app = new Vue({
-      el: '#stashe-web-app',
-      router,
-      components: { MainApp },
-      template: '<MainApp/>'
-    })
+firebase.auth().onAuthStateChanged( function(authenticatedUser) {
+  
+  if (authenticatedUser) {
+
+    getUser(authenticatedUser.uid, false)
+      .then(currentUser => { 
+
+        window.StasheApp.CurrentUser = currentUser;
+        if (!app) { app = startApp() }
+      });
+
+  } else {
+
+    window.StasheApp.CurrentUser = undefined;
+    if (!app) { app = startApp() }
   }
+  
 });

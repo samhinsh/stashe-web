@@ -1,6 +1,6 @@
 <template>
     <div class='ReadingListGridCell container' @click="didClickCellBody($event)">
-        <div class='thumbnail'></div>
+        <img id="thumbnail" :src="articleThumbnailSrc" @error="handleImageLoadError"/>
 
         <div class='headlineContainer'>
             <p class='headlineText'>{{ read.headline }}</p>
@@ -17,10 +17,27 @@ export default {
         read: Object // create & use strong Database.Read object
     },
 
+    data () {
+        return {
+            articleThumbnailSrc: ""
+        }
+    },
+
     methods: {
         didClickCellBody: function(event) {
             if (event) { window.open(this.read.url); }
+        },
+
+        handleImageLoadError: function() {
+            //  TODO fix case where image loaded but has transparent background showing through to the background-image
+            // See: https://www.npmjs.com/package/vue-images-loaded
+            this.articleThumbnailSrc = "https://wallpapertag.com/wallpaper/full/6/5/9/601333-free-cute-mustache-wallpapers-on-tumblr-2560x1600-image.jpg"
+            // TODO replace with Stashe official empty state image
         }
+    },
+
+    created() {
+        this.articleThumbnailSrc = this.read.imageURL;
     }
 }
 </script>
@@ -47,6 +64,7 @@ div.container {
 
 div.container:hover {
     opacity: 0.55;
+    cursor: pointer;
 }
 
 div.headlineContainer {
@@ -70,12 +88,14 @@ p.headlineText {
     text-align: left;
 }
 
-div.thumbnail {
-    /* Move this into js code later */
+#thumbnail {
     background-color: gray;
-    background-image: url("https://3.imimg.com/data3/IX/FX/MY-236745/coffee-white-pebbles-500x500.jpg");
+
+    /* TODO replace with Stashe image */
+    background-image: url("https://wallpapertag.com/wallpaper/full/6/5/9/601333-free-cute-mustache-wallpapers-on-tumblr-2560x1600-image.jpg");
     background-repeat: no-repeat;
     background-size: cover;
+    object-fit: cover;
     display: flex;
     width: 100%;
     height: 75%;

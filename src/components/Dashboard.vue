@@ -7,7 +7,7 @@
 
 
 <script>
-import { getReadingList } from '../Utilities/DatabaseUtilities'
+import { getReadingList } from '../utilities/DatabaseUtilities'
 import MainToolbar from './MainToolbar'
 import ReadingListGrid from './ReadingListGrid'
 

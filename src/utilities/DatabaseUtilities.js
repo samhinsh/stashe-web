@@ -32,24 +32,48 @@ const DatabaseQuery = {
     ReadURLViews        : 'read-url-views',
 };
 
-function helloWorld() {
-    console.log("Hello world! !!");
-}
 
 /**
  *
- * getReadingList returns the reading list from the database from a user's phone number.
+ * getReadingList returns the reading list from the database for the current user.
  *
  * @return {Promise} containing a dictionary representing each 'read' in the reading list, indexed by ID
  *         
  */
 function getReadingList() {
-    console.log("Getting the reading list!"); 
-    
-    const currentUserPhoneNumber = '+17084394869'; // TODO use real user #
+    const currentUserPhoneNumber = window.StasheApp.CurrentUser.phoneNumber;
+
+    if (!currentUserPhoneNumber) { return }; // TODO raise error
+
+    console.log("Getting the reading list for #:", currentUserPhoneNumber); 
 
     return firebase.database().ref(DatabaseQuery.ReadingLists).child(currentUserPhoneNumber).once('value')
         .then(snapshot => { return snapshot.val() }); 
 }
 
-export { getReadingList };
+
+
+/**
+ *
+ * getUser returns the user object relating to the given user phone number.
+ *
+ * @param {String}  id              - key to the user record whose object we're interested in
+ * @param {Boolean} byPhoneNumber   - whether or not the `id` property is a phoneNumber
+ * 
+ * @return {Promise} containing an representing the given user
+ *         
+ */
+function getUser(id, byPhoneNumber) {
+    if (!id) { return; } // TODO raise error
+
+    console.log("Getting the user for uid:", id);
+
+    let queryPath = (byPhoneNumber ? DatabaseQuery.PhoneUsers : DatabaseQuery.Users)
+    
+    return firebase.database().ref(queryPath).child(id).once('value')
+        .then(snapshot => { return snapshot.val() });
+}
+
+
+
+export { getReadingList, getUser };
