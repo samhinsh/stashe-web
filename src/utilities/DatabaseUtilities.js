@@ -43,7 +43,7 @@ const DatabaseQuery = {
 function getReadingList() {
     const currentUserPhoneNumber = window.StasheApp.CurrentUser.phoneNumber;
 
-    if (!currentUserPhoneNumber) { return }; // TODO raise error
+    if (!currentUserPhoneNumber) { return } // TODO raise error
 
     console.log("Getting the reading list for #:", currentUserPhoneNumber); 
 
@@ -64,7 +64,7 @@ function getReadingList() {
  *         
  */
 function getUser(id, byPhoneNumber) {
-    if (!id) { return; } // TODO raise error
+    if (!id) { return } // TODO raise error
 
     console.log("Getting the user for uid:", id);
 
@@ -76,4 +76,48 @@ function getUser(id, byPhoneNumber) {
 
 
 
-export { getReadingList, getUser };
+/**
+ *
+ * saveRead saves a link to the current user's reading list
+ *
+ * @param {String}  url - the url link to save to the reading list
+ * 
+ * @return {Promise} representing the completed operation
+ *         
+ */
+function saveRead(url) {
+    if (!url) { return } // TODO raise error
+
+    // TODO validate url
+
+    const currentUserPhoneNumber = window.StasheApp.CurrentUser.phoneNumber;
+    const currentUserID = window.StasheApp.CurrentUserID;
+
+    if (!currentUserPhoneNumber || !currentUserID) { return } // TODO raise error
+
+    console.log("Saving the link to the user's reading list:", url);
+
+    let newReadKey = firebase.database().ref(DatabaseQuery.ReadsToSend).push().key;
+
+    if (!newReadKey) { return } // TODO raise error
+
+    let recipients = {};
+    recipients[currentUserPhoneNumber] = true;
+
+    let readData = {
+        "url"               : url,
+        "recipients"        : recipients,
+        "senderID"          : currentUserID,
+        "senderPhoneNumber" : currentUserPhoneNumber,
+        "timeCreated"       : Date.now(),
+    }
+
+    var updates = {};
+    updates['/' + DatabaseQuery.ReadsToSend + '/' + newReadKey] = readData;
+
+    return firebase.database().ref().update(updates);
+}
+
+
+
+export { getReadingList, getUser, saveRead };

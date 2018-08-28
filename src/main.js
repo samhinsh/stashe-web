@@ -65,12 +65,14 @@ firebase.auth().onAuthStateChanged( function(authenticatedUser) {
       .then(currentUser => { 
 
         window.StasheApp.CurrentUser = currentUser;
+        window.StasheApp.CurrentUserID = authenticatedUser.uid;
         if (!app) { app = startApp() }
       });
 
   } else {
 
     window.StasheApp.CurrentUser = undefined;
+    window.StasheApp.CurrentUserID = undefined;
     if (!app) { app = startApp() }
   }
   

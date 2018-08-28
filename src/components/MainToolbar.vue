@@ -6,7 +6,7 @@
 
             <span id="saveLinkContainer">
                 <input v-model="saveLinkBarText" type="text" id="saveLinkTextbox" placeholder="Save a link to your reading list...">
-                <button v-if="saveLinkBarText && (saveLinkBarText.length > 0)" class="circleButton" id="saveButton">+</button>
+                <button v-if="linkBarTextIsValid()" class="circleButton" id="saveButton" @click="didClickSaveLinkButton">+</button>
             </span>
 
             <span class="optionsPane">
@@ -48,6 +48,18 @@
 
 <script>
 import firebase from "firebase";
+import { saveRead } from '../utilities/DatabaseUtilities'
+
+function isValidURL(str) {
+    let regex = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+    var pattern = new RegExp(regex,'i');
+    
+    if(!pattern.test(str)) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 export default {
   name: "MainToolbar",
@@ -59,6 +71,7 @@ export default {
   },
 
   methods: {
+
     didClickLogoutButton: function() {
       console.log("SAM:: Clicked log out button");
       let router = this.$router;
@@ -71,6 +84,36 @@ export default {
           console.log("SAM:: This: ", typeof this, this);
           router.replace("/login");
         });
+    },
+
+    didClickSaveLinkButton: function() {
+
+        // validate text
+        if(!this.linkBarTextIsValid()) { return }
+
+        // save link
+        const url = this.saveLinkBarText;
+        const isValidLink = isValidURL(url);
+
+        if (!isValidLink) {
+            alert("Please enter a valid URL.");
+            return;
+        }
+
+        saveRead(url)
+            .then(function() {
+                console.log("SAM:: MainToolbar:: Successfully saved the read!");
+            })
+            .catch(error => {
+                console.log("SAM:: MainToolbar:: Save Link error:", error);
+            })
+
+        // clear text
+        this.saveLinkBarText = "";
+    },
+
+    linkBarTextIsValid: function() {
+        return this.saveLinkBarText && (this.saveLinkBarText.length > 0)
     }
   }
 };
