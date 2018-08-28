@@ -18,15 +18,21 @@ export default {
         MainToolbar, ReadingListGrid
     },
 
-    data() {
+    data () {
         return {
             readingListDict: {}
         }
     },
 
-    created() {
-        getReadingList()
-            .then(readingList => { this.readingListDict = readingList });
+    created () {
+        this.fetchReadingList();
+    },
+
+    methods: {
+        fetchReadingList: function() {
+            return getReadingList()
+                .then(readingList => { this.readingListDict = readingList });
+        }
     }
 }
 

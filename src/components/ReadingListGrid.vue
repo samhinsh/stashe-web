@@ -31,8 +31,8 @@ export default {
 
     watch: {
         readingList: function(newList, oldList) {
-            console.log("SAM::ReadingListGrid:: Old List", Object.values(oldList));
-            console.log("SAM::ReadingListGrid:: New List", Object.values(newList));
+            console.log("ReadingListGrid:: Old List", Object.values(oldList));
+            console.log("ReadingListGrid:: New List", Object.values(newList));
         }
     }
 }

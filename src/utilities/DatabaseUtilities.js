@@ -45,7 +45,7 @@ function getReadingList() {
 
     if (!currentUserPhoneNumber) { return } // TODO raise error
 
-    console.log("Getting the reading list for #:", currentUserPhoneNumber); 
+    console.log("DatabaseUtilities:: Getting the reading list for #:", currentUserPhoneNumber); 
 
     return firebase.database().ref(DatabaseQuery.ReadingLists).child(currentUserPhoneNumber).once('value')
         .then(snapshot => { return snapshot.val() }); 
@@ -66,7 +66,7 @@ function getReadingList() {
 function getUser(id, byPhoneNumber) {
     if (!id) { return } // TODO raise error
 
-    console.log("Getting the user for uid:", id);
+    console.log("DatabaseUtilities:: Getting the user for uid:", id);
 
     let queryPath = (byPhoneNumber ? DatabaseQuery.PhoneUsers : DatabaseQuery.Users)
     
@@ -95,7 +95,7 @@ function saveRead(url) {
 
     if (!currentUserPhoneNumber || !currentUserID) { return } // TODO raise error
 
-    console.log("Saving the link to the user's reading list:", url);
+    console.log("DatabaseUtilities:: Saving the link to the user's reading list:", url);
 
     let newReadKey = firebase.database().ref(DatabaseQuery.ReadsToSend).push().key;
 
@@ -109,7 +109,7 @@ function saveRead(url) {
         "recipients"        : recipients,
         "senderID"          : currentUserID,
         "senderPhoneNumber" : currentUserPhoneNumber,
-        "timeCreated"       : Date.now(),
+        "timeCreated"       : Date.now() / 1000,
     }
 
     var updates = {};

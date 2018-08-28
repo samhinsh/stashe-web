@@ -33,7 +33,7 @@ export default {
         didClickSubmit: function() {
             // TODO validate phone number
             // TODO clean up variable names & declarations
-            console.log("SAM:: Did click submit, phoneNo:", this.phoneNumber);
+            
             window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
             let phoneNumber = this.phoneNumber;
             let appVerifier = window.recaptchaVerifier;
@@ -42,23 +42,22 @@ export default {
                 this.confirmationResult = confirmationResult
             })
             .catch(error => {
-                console.log("SAM:: There was an error during confirmation", error);
+                console.log("Login:: There was an error during confirmation", error);
                 // TODO clear reCAPTCHA
             });
         },
         didClickConfirm: function() {
-            console.log("SAM:: Did click confirm for code:", this.confirmationCode);
             let confirmationCode = this.confirmationCode;
             let router = this.$router;
 
             // TODO start loading indicator
             this.confirmationResult.confirm(confirmationCode)
             .then(userCredential => {
-                console.log("SAM:: Sign in success! User credential", userCredential);
+                console.log("Login:: Sign in success! User credential", userCredential);
                 router.replace('/dashboard');
             })
             .catch(error => {
-                console.log("Something went wrong during confirmation:", error);
+                console.log("Login:: Something went wrong during confirmation:", error);
             })
             // TODO segue to destination
         }

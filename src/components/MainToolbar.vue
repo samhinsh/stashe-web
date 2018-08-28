@@ -2,11 +2,12 @@
     <div class="bounding-box">
         <div class="container">
             
-            <img id="logo" src="../assets/mustache.png"/>
+            <img id="logo" src="../assets/mustache.png" @click="didClickStasheLogo()"/>
 
             <span id="saveLinkContainer">
+                <img id="paperclip" src="../assets/paperclip.svg"/>
                 <input v-model="saveLinkBarText" type="text" id="saveLinkTextbox" placeholder="Save a link to your reading list...">
-                <button v-if="linkBarTextIsValid()" class="circleButton" id="saveButton" @click="didClickSaveLinkButton">+</button>
+                <button v-if="linkBarTextIsValid()" class="squareButton" id="saveButton" @click="didClickSaveLinkButton">Save</button>
             </span>
 
             <span class="optionsPane">
@@ -16,8 +17,7 @@
                 <!-- TODO Replace with icon -->
                 <span class="optionsPane item">Notifications
 
-                    <!-- TODO remove when the discrepancy between 
-                    this and the settings button menu is understood & resolved -->
+                    <!-- TODO remove -->
                     <ul>
                         <li> Hello world!</li>
                         <li> Hello world!</li>
@@ -27,14 +27,12 @@
                 </span>
 
                 <!-- TODO Replace with icon -->
-                <button class="optionsPane item circleButton"></button>
+                <img class="optionsPane item circleButton profilePhoto" :src="profilePictureURL"/>
 
                 <span class="optionsPane item">
 
-                    <!-- TODO make button color show grey  -->
                     <img class="optionsPane item settingsButton" src="../assets/three-dots.svg"/>
 
-                    <!-- TODO this menu appears at a different height than other menus -->
                     <ul>
                         <li @click="didClickLogoutButton">Logout</li>
                     </ul>
@@ -47,41 +45,33 @@
 
 
 <script>
-import firebase from "firebase";
+import firebase from 'firebase';
 import { saveRead } from '../utilities/DatabaseUtilities'
-
-function isValidURL(str) {
-    let regex = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-    var pattern = new RegExp(regex,'i');
-    
-    if(!pattern.test(str)) {
-        return false;
-    } else {
-        return true;
-    }
-}
+import { isValidURL } from '../utilities/Helpers'
 
 export default {
   name: "MainToolbar",
 
   data() {
       return {
+          profilePictureURL: window.StasheApp.CurrentUser.profilePictureURL,
           saveLinkBarText: ""
       }
+  },
+
+  mounted () {
+      console.log("SAM:: Profile Photo URL:", this.profilePictureURL);
   },
 
   methods: {
 
     didClickLogoutButton: function() {
-      console.log("SAM:: Clicked log out button");
       let router = this.$router;
 
       firebase
         .auth()
         .signOut()
         .then(function() {
-          console.log("SAM:: Sign out promise resolved");
-          console.log("SAM:: This: ", typeof this, this);
           router.replace("/login");
         });
     },
@@ -102,15 +92,17 @@ export default {
 
         saveRead(url)
             .then(function() {
-                console.log("SAM:: MainToolbar:: Successfully saved the read!");
+                console.log("MainToolbar:: Successfully saved the read!");
             })
             .catch(error => {
-                console.log("SAM:: MainToolbar:: Save Link error:", error);
+                console.log("MainToolbar:: Save Link error:", error);
             })
 
         // clear text
         this.saveLinkBarText = "";
     },
+
+    didClickStasheLogo: function() { window.location.reload() },
 
     linkBarTextIsValid: function() {
         return this.saveLinkBarText && (this.saveLinkBarText.length > 0)
@@ -121,6 +113,12 @@ export default {
 
 
 <style lang="scss" scoped>
+
+/* variables */
+$subtle-white: #f9f9f9;
+$subtle-grey: #f2f2f2;
+$pink: rgba(255, 39, 53, 0.925);
+
 .bounding-box {
   border-width: 0px 0px 1px 0px;
   border-color: gainsboro;
@@ -141,6 +139,12 @@ button:focus {
   border-style: none;
   height: 2.5vw;
   width: 2.5vw;
+  overflow: hidden;
+
+  &.profilePhoto {
+      object-fit: cover;
+      transform: rotate(90deg);
+  }
 }
 
 .container {
@@ -151,6 +155,21 @@ button:focus {
   height: 100%;
   width: 100%;
   margin: 0 2vw;
+}
+
+.squareButton {
+    background-color: $pink;
+    border-radius: 2px;
+    border-style: none;
+    color: white;
+    font-weight: bold;
+    height: 2.5vw;
+    width: 4.5vw;
+    overflow: hidden;
+
+    &:hover {
+        background-color: darken($pink, 10%);
+    }
 }
 
 input {
@@ -167,6 +186,15 @@ input {
 #logo {
     object-fit: cover;
     height: 20px; 
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+#paperclip {
+    height: 28px;
+    margin-right: 10px;
 }
 
 #saveButton {
@@ -190,10 +218,6 @@ input {
   height: 5.8vh;
 }
 
-/* variables */
-$subtle-white: #f9f9f9;
-$subtle-grey: #f2f2f2;
-
 .optionsPane {
   align-items: center;
   display: flex;
@@ -209,7 +233,7 @@ $subtle-grey: #f2f2f2;
 
     &.settingsButton {
         // fill: pink !important;
-        height: 30px;
+        height: 6px;
     }
     
     /* secondary ul */
@@ -234,9 +258,12 @@ $subtle-grey: #f2f2f2;
             
             /* secondary li */
             li {
-                display: block;
+                align-items: center;
                 background-color: darken($subtle-white, 7%);
-                height: 30px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                height: 29px;
                 
                 &:hover {
                     background-color: darken($subtle-white, 10%);
