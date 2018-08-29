@@ -39,10 +39,11 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
+$offWhite: rgb(250, 250, 250);
 
 .container {
-    background-color: rgb(250, 250, 250);
+    background-color: $offWhite;
     width: 100%;
 }
 
