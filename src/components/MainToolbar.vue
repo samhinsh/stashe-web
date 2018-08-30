@@ -52,7 +52,7 @@ import { isValidURL } from '../utilities/Helpers'
 export default {
   name: "MainToolbar",
 
-  data() {
+  data () {
       return {
           profilePictureURL: window.StasheApp.CurrentUser.profilePictureURL,
           saveLinkBarText: ""

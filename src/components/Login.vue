@@ -128,7 +128,8 @@ export default {
                 .confirm(confirmationCode)
                 .then(userCredential => {
                     console.log("Login:: Sign in success! User credential", userCredential);
-                    router.replace('/dashboard');
+                    // router.replace('/dashboard');
+                    // console.log("Login:: Router has changed components");
                 })
                 .catch(error => {
                     alert("There was an error with your sign in code.");
@@ -218,7 +219,7 @@ $darkRed: rgba(167, 0, 11, 0.925);
     overflow: hidden;
 
     .errorText {
-        color: $darkRed;
+        color: gray;
         font-size: 14px;
         width: 70%;
         text-align: center;

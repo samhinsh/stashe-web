@@ -61,15 +61,23 @@ firebase.auth().onAuthStateChanged( function(authenticatedUser) {
   
   if (authenticatedUser) {
 
+    console.log("SAM:: Main:: User is authenticated");
     getUser(authenticatedUser.uid, false)
       .then(currentUser => { 
 
+        console.log("SAM:: Main:: current user from getUser:", currentUser);
+        console.log("SAM:: Main:: authUser from onStateChanged:", authenticatedUser);
+
         window.StasheApp.CurrentUser = currentUser;
         window.StasheApp.CurrentUserID = authenticatedUser.uid;
-        if (!app) { app = startApp() }
+
+        if (!app) { app = startApp() }     // app hasn't yet started and user was logged in
+        else { app.$router.replace("/") }; // app is already going and user has just logged in
       });
 
   } else {
+
+    console.log("SAM:: Main:: User is not authenticated");
 
     window.StasheApp.CurrentUser = undefined;
     window.StasheApp.CurrentUserID = undefined;

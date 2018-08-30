@@ -43,7 +43,10 @@ const DatabaseQuery = {
 function getReadingList() {
     const currentUserPhoneNumber = window.StasheApp.CurrentUser.phoneNumber;
 
-    if (!currentUserPhoneNumber) { return } // TODO raise error
+    if (!currentUserPhoneNumber) {
+        console.log("DatabaseUtilities:: CurrentUserPhoneNumber couldn't be found");
+        return;
+    } // TODO raise error
 
     console.log("DatabaseUtilities:: Getting the reading list for #:", currentUserPhoneNumber); 
 
