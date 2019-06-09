@@ -1,6 +1,6 @@
 # stashe-web
 
-> A Vue.js project. See hosted version at: stashe-app.firebaseapp.com
+> A Vue.js project. See hosted version at: http://stashe-app.firebaseapp.com
 
 ## Build Setup
 
